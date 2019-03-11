@@ -8,7 +8,7 @@
 		Database Framework	:	EF Core
 		DI Framework		:	Microsoft's DI
 		Auth Framework		:	Identity Framework
-		Database			:	MSSQL Server
+		Database		:	MSSQL Server
 
 		Other dependencies will be listed as i build
 		this project, it will include CSS/JS libraries
