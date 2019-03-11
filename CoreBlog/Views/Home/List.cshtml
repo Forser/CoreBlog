@@ -1,0 +1,6 @@
+﻿@model PostsListViewModel
+
+@foreach (var p in Model.Posts)
+{
+       @Html.Partial("PostsSummary", p)
+}

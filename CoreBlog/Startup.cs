@@ -19,6 +19,7 @@ namespace CoreBlog
         {
             services.AddMvc();
             services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(Configuration["CoreBlog:ConnectionString"]));
+            services.AddTransient<IPostRepository, PostRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -31,7 +32,12 @@ namespace CoreBlog
 
             app.UseStatusCodePages();
             app.UseStaticFiles();
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(name: "default", template: "{controller=Home}/{action=List}/{id?}");
+            });
+
+            SeedBlogPosts.EnsuredPopulated(app);
         }
     }
 }
