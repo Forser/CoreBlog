@@ -32,6 +32,23 @@ namespace CoreBlog.Migrations
                     b.ToTable("Blogs");
                 });
 
+            modelBuilder.Entity("CoreBlog.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CategoryName");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("UrlSlug");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("CoreBlog.Models.Post", b =>
                 {
                     b.Property<int>("PostId")
@@ -42,17 +59,31 @@ namespace CoreBlog.Migrations
 
                     b.Property<int>("BlogForeignKey");
 
+                    b.Property<int?>("CategoryId");
+
                     b.Property<string>("Content");
+
+                    b.Property<string>("MetaDataDescription");
+
+                    b.Property<DateTime?>("ModifiedLastAt");
 
                     b.Property<DateTime>("PostCreatedAt");
 
+                    b.Property<bool>("Published");
+
+                    b.Property<string>("ShortContent");
+
                     b.Property<string>("Title");
+
+                    b.Property<string>("UrlSlug");
 
                     b.HasKey("PostId");
 
                     b.HasIndex("AuthorForeignKey");
 
                     b.HasIndex("BlogForeignKey");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Posts");
                 });
@@ -65,7 +96,7 @@ namespace CoreBlog.Migrations
 
                     b.Property<int?>("PostId1");
 
-                    b.Property<string>("TagForeignKey");
+                    b.Property<int>("TagForeignKey");
 
                     b.HasKey("PostId");
 
@@ -78,8 +109,13 @@ namespace CoreBlog.Migrations
 
             modelBuilder.Entity("CoreBlog.Models.Tag", b =>
                 {
-                    b.Property<string>("TagId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("TagId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("TagName");
+
+                    b.Property<string>("UrlSlug");
 
                     b.HasKey("TagId");
 
@@ -114,6 +150,10 @@ namespace CoreBlog.Migrations
                         .WithMany("Posts")
                         .HasForeignKey("BlogForeignKey")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("CoreBlog.Models.Category", "Category")
+                        .WithMany("Posts")
+                        .HasForeignKey("CategoryId");
                 });
 
             modelBuilder.Entity("CoreBlog.Models.PostTag", b =>
@@ -124,7 +164,8 @@ namespace CoreBlog.Migrations
 
                     b.HasOne("CoreBlog.Models.Tag", "Tag")
                         .WithMany("PostTags")
-                        .HasForeignKey("TagForeignKey");
+                        .HasForeignKey("TagForeignKey")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

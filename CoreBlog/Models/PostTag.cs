@@ -9,7 +9,7 @@ namespace CoreBlog.Models
         public int PostId { get; set; }
         public Post Post { get; set; }
 
-        public string TagForeignKey { get; set; }
+        public int TagForeignKey { get; set; }
         [ForeignKey("TagForeignKey")]
         public Tag Tag { get; set; }
     }
