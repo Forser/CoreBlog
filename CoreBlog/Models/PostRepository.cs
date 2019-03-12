@@ -18,7 +18,7 @@ namespace CoreBlog.Models
 
         public void DeleteBlogPost(int postId)
         {
-            Post dbPost = context.Posts.FirstOrDefault(p => p.PostId == postId);
+            Post dbPost = context.Posts.SingleOrDefault(p => p.PostId == postId);
             if (dbPost != null)
             {
                 context.Posts.Remove(dbPost);
@@ -26,13 +26,13 @@ namespace CoreBlog.Models
             }
         }
 
-        public Post GetBlogPost(int postId)
+        public Post GetBlogPost(int? postId)
         {
             Post dbPost = new Post();
 
             if (postId != 0)
             {
-                dbPost = context.Posts.FirstOrDefault(p => p.PostId == postId);
+                dbPost = context.Posts.SingleOrDefault(p => p.PostId == postId);
             }
 
             return dbPost;

@@ -10,7 +10,7 @@ namespace CoreBlog.Models
 
         void DeleteBlogPost(int postId);
 
-        Post GetBlogPost(int postId);
+        Post GetBlogPost(int? postId);
 
         void UpdateBlogPost(Post post);
     }

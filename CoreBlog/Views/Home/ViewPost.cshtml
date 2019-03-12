@@ -1,0 +1,12 @@
+﻿@model Post
+
+<div class="blog-post">
+    <h3>@Model.Title <small>@Model.PostCreatedAt.ToShortDateString()</small></h3>
+    <p>@Model.Content</p>
+    <div class="callout">
+        <ul class="menu simple">
+            <li><a href="#">Author: Mike Mikers</a></li>
+            <li><a href="#">Comments: 3</a></li>
+        </ul>
+    </div>
+</div>
