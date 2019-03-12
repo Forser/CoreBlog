@@ -16,13 +16,13 @@ namespace CoreBlog.Controllers
 
         public ViewResult Index() => View();
 
-        public ViewResult ViewPost(int? id)
+        public IActionResult ViewPost(int? id)
         {
             var result = repository.GetBlogPost(id);
 
-            if(result != null) { return View(result); }
+            if(result == null) { return View("PostNotFound"); }
 
-            return View();
+            return View(result);
         }
 
         public ViewResult List() => View(new PostsListViewModel
