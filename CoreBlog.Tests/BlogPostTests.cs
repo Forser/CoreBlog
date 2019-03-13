@@ -30,8 +30,9 @@ namespace CoreBlog.Tests
                     UrlSlug = "/my_first_title",
                     Published = true,
                     PostCreatedAt = DateTime.Parse("2018-12-24 12:00"),
-                    Author = new User { UserId = 1 },
-                    Blog = new Blog { BlogId = 1 }
+                    User = new User { AuthorName = "Marcus Eklund" },
+                    Blog = new Blog { BlogId = 1 },
+                    Category = new Category { CategoryName = "Development " }
                 },
                 new Post
                 {
@@ -43,8 +44,9 @@ namespace CoreBlog.Tests
                     UrlSlug = "/my_second_title",
                     Published = false,
                     PostCreatedAt = DateTime.Now,
-                    Author = new User { UserId = 1 },
-                    Blog = new Blog { BlogId = 1 }
+                    User = new User { AuthorName = "Marcus Eklund" },
+                    Blog = new Blog { BlogId = 1 },
+                    Category = new Category { CategoryName = "Development " }
                 },
                 new Post
                 {
@@ -56,8 +58,9 @@ namespace CoreBlog.Tests
                     UrlSlug = "/my_third_title",
                     Published = true,
                     PostCreatedAt = DateTime.Now,
-                    Author = new User { UserId = 1 },
-                    Blog = new Blog { BlogId = 1 }
+                    User = new User { AuthorName = "Marcus Eklund" },
+                    Blog = new Blog { BlogId = 1 },
+                    Category = new Category { CategoryName = "Development " }
                 }
             }.AsQueryable<Post>);
 
@@ -86,7 +89,7 @@ namespace CoreBlog.Tests
                 UrlSlug = "my_first_title",
                 Published = true,
                 PostCreatedAt = DateTime.Parse("2018-12-24 12:00"),
-                Author = new User { UserId = 1 },
+                User = new User { AuthorName = "Marcus Eklund" },
                 Blog = new Blog { BlogId = 1 }
             };
             mock.Setup(repo => repo.GetBlogPostByUrlSlug("my_first_title")).Returns(mockPost);
@@ -115,8 +118,9 @@ namespace CoreBlog.Tests
                 UrlSlug = "my_first_title",
                 Published = true,
                 PostCreatedAt = DateTime.Parse("2018-12-24 12:00"),
-                Author = new User { UserId = 1 },
-                Blog = new Blog { BlogId = 1 }
+                User = new User { AuthorName = "Marcus Eklund" },
+                Blog = new Blog { BlogId = 1 },
+                Category = new Category { CategoryName = "Development " }
             };
             mock.Setup(repo => repo.GetBlogPostByUrlSlug("my_second_title")).Returns((Post)null);
             var target = new HomeController(mock.Object);
@@ -128,50 +132,6 @@ namespace CoreBlog.Tests
             Assert.IsType<ViewResult>(result);
             var contentResult = result as ViewResult;
             Assert.Equal("PostNotFound", contentResult.ViewName);
-        }
-
-        [Fact]
-        public void Post_New_Blog_Post()
-        {
-            // Arrange
-            
-            // Act
-
-            // Assert
-
-        }
-
-        [Fact]
-        public void Edit_One_Blog_Post()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-
-        }
-
-        [Fact]
-        public void Delete_One_Blog_Post()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-
-        }
-
-        [Fact]
-        public void Delete_Several_Blog_Posts()
-        {
-            // Arrange
-
-            // Act
-
-            // Assert
-
         }
 
         private T GetViewModel<T>(IActionResult result) where T : class

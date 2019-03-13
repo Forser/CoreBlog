@@ -58,11 +58,18 @@ namespace CoreBlog.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
-                    AuthorName = table.Column<string>(nullable: true)
+                    AuthorName = table.Column<string>(nullable: true),
+                    BlogForeignKey = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_Users_Blogs_BlogForeignKey",
+                        column: x => x.BlogForeignKey,
+                        principalTable: "Blogs",
+                        principalColumn: "BlogId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,9 +86,9 @@ namespace CoreBlog.Migrations
                     Published = table.Column<bool>(nullable: false),
                     PostCreatedAt = table.Column<DateTime>(nullable: false),
                     ModifiedLastAt = table.Column<DateTime>(nullable: true),
-                    AuthorForeignKey = table.Column<int>(nullable: false),
                     BlogForeignKey = table.Column<int>(nullable: false),
-                    CategoryId = table.Column<int>(nullable: true)
+                    AuthorForeignKey = table.Column<int>(nullable: false),
+                    CategoryId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,7 +104,7 @@ namespace CoreBlog.Migrations
                         column: x => x.BlogForeignKey,
                         principalTable: "Blogs",
                         principalColumn: "BlogId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Posts_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -107,26 +114,26 @@ namespace CoreBlog.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PostTag",
+                name: "PostTags",
                 columns: table => new
                 {
-                    PostId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    PostId1 = table.Column<int>(nullable: true),
-                    TagForeignKey = table.Column<int>(nullable: false)
+                    PostId = table.Column<int>(nullable: false),
+                    TagId = table.Column<int>(nullable: false),
+                    id = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PostTag", x => x.PostId);
+                    table.PrimaryKey("PK_PostTags", x => new { x.PostId, x.TagId });
+                    table.UniqueConstraint("AK_PostTags_id", x => x.id);
                     table.ForeignKey(
-                        name: "FK_PostTag_Posts_PostId1",
-                        column: x => x.PostId1,
+                        name: "FK_PostTags_Posts_PostId",
+                        column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "PostId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PostTag_Tags_TagForeignKey",
-                        column: x => x.TagForeignKey,
+                        name: "FK_PostTags_Tags_TagId",
+                        column: x => x.TagId,
                         principalTable: "Tags",
                         principalColumn: "TagId",
                         onDelete: ReferentialAction.Cascade);
@@ -148,20 +155,20 @@ namespace CoreBlog.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostTag_PostId1",
-                table: "PostTag",
-                column: "PostId1");
+                name: "IX_PostTags_TagId",
+                table: "PostTags",
+                column: "TagId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PostTag_TagForeignKey",
-                table: "PostTag",
-                column: "TagForeignKey");
+                name: "IX_Users_BlogForeignKey",
+                table: "Users",
+                column: "BlogForeignKey");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "PostTag");
+                name: "PostTags");
 
             migrationBuilder.DropTable(
                 name: "Posts");
@@ -173,10 +180,10 @@ namespace CoreBlog.Migrations
                 name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Blogs");
+                name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Blogs");
         }
     }
 }

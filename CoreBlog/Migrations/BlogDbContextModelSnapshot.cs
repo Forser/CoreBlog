@@ -59,7 +59,7 @@ namespace CoreBlog.Migrations
 
                     b.Property<int>("BlogForeignKey");
 
-                    b.Property<int?>("CategoryId");
+                    b.Property<int>("CategoryId");
 
                     b.Property<string>("Content");
 
@@ -90,21 +90,19 @@ namespace CoreBlog.Migrations
 
             modelBuilder.Entity("CoreBlog.Models.PostTag", b =>
                 {
-                    b.Property<int>("PostId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("PostId");
 
-                    b.Property<int?>("PostId1");
+                    b.Property<int>("TagId");
 
-                    b.Property<int>("TagForeignKey");
+                    b.Property<int>("id");
 
-                    b.HasKey("PostId");
+                    b.HasKey("PostId", "TagId");
 
-                    b.HasIndex("PostId1");
+                    b.HasAlternateKey("id");
 
-                    b.HasIndex("TagForeignKey");
+                    b.HasIndex("TagId");
 
-                    b.ToTable("PostTag");
+                    b.ToTable("PostTags");
                 });
 
             modelBuilder.Entity("CoreBlog.Models.Tag", b =>
@@ -130,41 +128,55 @@ namespace CoreBlog.Migrations
 
                     b.Property<string>("AuthorName");
 
+                    b.Property<int>("BlogForeignKey");
+
                     b.Property<string>("FirstName");
 
                     b.Property<string>("LastName");
 
                     b.HasKey("UserId");
 
+                    b.HasIndex("BlogForeignKey");
+
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CoreBlog.Models.Post", b =>
                 {
-                    b.HasOne("CoreBlog.Models.User", "Author")
-                        .WithMany()
+                    b.HasOne("CoreBlog.Models.User", "User")
+                        .WithMany("Posts")
                         .HasForeignKey("AuthorForeignKey")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("CoreBlog.Models.Blog", "Blog")
                         .WithMany("Posts")
                         .HasForeignKey("BlogForeignKey")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CoreBlog.Models.Category", "Category")
                         .WithMany("Posts")
-                        .HasForeignKey("CategoryId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("CoreBlog.Models.PostTag", b =>
                 {
                     b.HasOne("CoreBlog.Models.Post", "Post")
                         .WithMany("PostTags")
-                        .HasForeignKey("PostId1");
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("CoreBlog.Models.Tag", "Tag")
                         .WithMany("PostTags")
-                        .HasForeignKey("TagForeignKey")
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("CoreBlog.Models.User", b =>
+                {
+                    b.HasOne("CoreBlog.Models.Blog", "Blog")
+                        .WithMany("Users")
+                        .HasForeignKey("BlogForeignKey")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

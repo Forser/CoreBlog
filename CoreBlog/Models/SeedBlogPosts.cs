@@ -12,8 +12,15 @@ namespace CoreBlog.Models
         {
             BlogDbContext context = app.ApplicationServices.GetRequiredService<BlogDbContext>();
 
-            User user = new User { FirstName = "Marcus", LastName = "Eklund", AuthorName = "Marcus Eklund" };
             Blog blog = new Blog { Url = "http://localhost"};
+
+            if (!context.Blogs.Any())
+            {
+                context.Blogs.Add(blog);
+                context.SaveChanges();
+            }
+
+            User user = new User { FirstName = "Marcus", LastName = "Eklund", AuthorName = "Marcus Eklund", Blog = blog };
 
             if (!context.Users.Any())
             {
@@ -21,9 +28,11 @@ namespace CoreBlog.Models
                 context.SaveChanges();
             }
 
-            if (!context.Blogs.Any())
+            Category category = new Category { CategoryName = "Development", UrlSlug = "development" };
+
+            if (!context.Categories.Any())
             {
-                context.Blogs.Add(blog);
+                context.Categories.Add(category);
                 context.SaveChanges();
             }
 
@@ -39,8 +48,9 @@ namespace CoreBlog.Models
                         UrlSlug = "my_first_post",
                         Published = true,
                         PostCreatedAt = DateTime.Parse("2018-01-31 12:00"),
-                        Author = user,
-                        Blog = blog
+                        User = user,
+                        Blog = blog,
+                        Category = category
                     },
                     new Post
                     {
@@ -51,8 +61,9 @@ namespace CoreBlog.Models
                         UrlSlug = "my_second_post",
                         Published = true,
                         PostCreatedAt = DateTime.Parse("2018-04-14 14:00"),
-                        Author = user,
-                        Blog = blog
+                        User = user,
+                        Blog = blog,
+                        Category = category
                     },
                     new Post
                     {
@@ -63,8 +74,9 @@ namespace CoreBlog.Models
                         UrlSlug = "my_christmas",
                         Published = false,
                         PostCreatedAt = DateTime.Parse("2018-12-24 13:35"),
-                        Author = user,
-                        Blog = blog
+                        User = user,
+                        Blog = blog,
+                        Category = category
                     },
                     new Post
                     {
@@ -75,8 +87,9 @@ namespace CoreBlog.Models
                         UrlSlug = "my_fourth_post",
                         Published = true,
                         PostCreatedAt = DateTime.Now,
-                        Author = user,
-                        Blog = blog
+                        User = user,
+                        Blog = blog,
+                        Category = category
                     }
                     );
                 context.SaveChanges();

@@ -35,7 +35,7 @@ namespace CoreBlog
             app.UseMvc(routes =>
             {
                 routes.MapRoute(name: "default", template: "{controller=Home}/{action=List}/{id?}");
-                routes.MapRoute(name: "ViewPost", template: "{controller=Home}/{action=ViewPostBySlug}/{id?}");
+                routes.MapRoute(name: "ViewPost", template: "{action}/{id?}", defaults: new { controller = "Home", action = "ViewPostBySlug" });
             });
 
             SeedBlogPosts.EnsuredPopulated(app);

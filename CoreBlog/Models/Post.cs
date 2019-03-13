@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoreBlog.Models
 {
@@ -17,14 +16,13 @@ namespace CoreBlog.Models
         public DateTime? ModifiedLastAt { get; set; }
 
 
-        public int AuthorForeignKey { get; set; }
-        [ForeignKey("AuthorForeignKey")]
-        public User Author { get; set; }
-
         public int BlogForeignKey { get; set; }
-        [ForeignKey("BlogForeignKey")]
         public Blog Blog { get; set; }
 
+        public int AuthorForeignKey { get; set; }
+        public User User { get; set; }
+
+        public int CategoryId { get; set; }
         public Category Category { get; set; }
 
         public List<PostTag> PostTags { get; set; }
