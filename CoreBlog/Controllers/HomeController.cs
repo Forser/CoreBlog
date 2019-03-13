@@ -16,11 +16,12 @@ namespace CoreBlog.Controllers
 
         public ViewResult Index() => View();
 
-        public IActionResult ViewPost(int? id)
+        [ActionName("ViewPost")]
+        public IActionResult ViewPostBySlug(string id)
         {
-            var result = repository.GetBlogPost(id);
+            var result = repository.GetBlogPostByUrlSlug(id);
 
-            if(result == null) { return View("PostNotFound"); }
+            if (result == null) { return View("PostNotFound"); }
 
             return View(result);
         }

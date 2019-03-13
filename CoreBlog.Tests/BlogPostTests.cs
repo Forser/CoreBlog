@@ -72,7 +72,7 @@ namespace CoreBlog.Tests
         }
 
         [Fact]
-        public void Get_One_Blog_Post()
+        public void Get_One_Blog_Post_ByUrlSlug()
         {
             // Arrange
             Mock<IPostRepository> mock = new Mock<IPostRepository>();
@@ -83,17 +83,17 @@ namespace CoreBlog.Tests
                 Content = "Lorem Ipsum",
                 ShortContent = "Lorem",
                 MetaDataDescription = "Lorem, Ipsum",
-                UrlSlug = "/my_first_title",
+                UrlSlug = "my_first_title",
                 Published = true,
                 PostCreatedAt = DateTime.Parse("2018-12-24 12:00"),
                 Author = new User { UserId = 1 },
                 Blog = new Blog { BlogId = 1 }
             };
-            mock.Setup(repo => repo.GetBlogPost(1)).Returns(mockPost);
+            mock.Setup(repo => repo.GetBlogPostByUrlSlug("my_first_title")).Returns(mockPost);
             HomeController target = new HomeController(mock.Object);
 
             // Act
-            var result = target.ViewPost(1);
+            var result = target.ViewPostBySlug("my_first_title");
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -101,7 +101,7 @@ namespace CoreBlog.Tests
         }
 
         [Fact]
-        public void Return_Post_Not_Found_ById()
+        public void Return_Post_Not_Found_ByUrlSlug()
         {
             // Arrange
             Mock<IPostRepository> mock = new Mock<IPostRepository>();
@@ -112,17 +112,17 @@ namespace CoreBlog.Tests
                 Content = "Lorem Ipsum",
                 ShortContent = "Lorem",
                 MetaDataDescription = "Lorem, Ipsum",
-                UrlSlug = "/my_first_title",
+                UrlSlug = "my_first_title",
                 Published = true,
                 PostCreatedAt = DateTime.Parse("2018-12-24 12:00"),
                 Author = new User { UserId = 1 },
                 Blog = new Blog { BlogId = 1 }
             };
-            mock.Setup(repo => repo.GetBlogPost(1)).Returns((Post)null);
+            mock.Setup(repo => repo.GetBlogPostByUrlSlug("my_second_title")).Returns((Post)null);
             var target = new HomeController(mock.Object);
 
             // Act
-            var result = target.ViewPost(1);
+            var result = target.ViewPostBySlug("my_second_title");
 
             // Assert
             Assert.IsType<ViewResult>(result);

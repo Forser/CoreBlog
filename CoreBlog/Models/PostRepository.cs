@@ -26,13 +26,25 @@ namespace CoreBlog.Models
             }
         }
 
-        public Post GetBlogPost(int? postId)
+        public Post GetBlogPostById(int? postId)
         {
             Post dbPost = new Post();
 
             if (postId != 0)
             {
                 dbPost = context.Posts.SingleOrDefault(p => p.PostId == postId);
+            }
+
+            return dbPost;
+        }
+
+        public Post GetBlogPostByUrlSlug(string urlSlug)
+        {
+            Post dbPost = new Post();
+
+            if (!string.IsNullOrEmpty(urlSlug))
+            {
+                dbPost = context.Posts.SingleOrDefault(p => p.UrlSlug == urlSlug);
             }
 
             return dbPost;
