@@ -37,6 +37,7 @@ namespace CoreBlog.Models
         public void DeleteBlogPost(int postId)
         {
             Post dbPost = context.Posts.SingleOrDefault(p => p.PostId == postId);
+
             if (dbPost != null)
             {
                 context.Posts.Remove(dbPost);

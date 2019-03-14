@@ -31,5 +31,17 @@ namespace CoreBlog.Controllers
             }
             return RedirectToAction("List", "Home");
         }
+
+        public IActionResult DeletePost(int id = 0)
+        {
+            if(id >= 0)
+            { 
+                repository.DeleteBlogPost(id);
+                return RedirectToAction("List", "Home");
+            }
+
+            ModelState.AddModelError("error", "ID wasn't available");
+            return View();
+        }
     }
 }
