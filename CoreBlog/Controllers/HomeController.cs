@@ -28,7 +28,7 @@ namespace CoreBlog.Controllers
 
         public ViewResult List() => View(new PostsListViewModel
         {
-            Posts = repository.Posts.OrderBy(p => p.PostId).Where(p => p.Published == true)
+            Posts = repository.Posts.Where(p => p.Published == true).OrderByDescending(p => p.PostId)
         });
     }
 }

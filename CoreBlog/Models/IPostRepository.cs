@@ -6,7 +6,7 @@ namespace CoreBlog.Models
     {
         IQueryable<Post> Posts { get; }
 
-        void CreateNewBlogPost(Post post);
+        void CreateNewBlogPost(Post post, Category category);
 
         void DeleteBlogPost(int postId);
 

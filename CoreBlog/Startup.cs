@@ -18,6 +18,7 @@ namespace CoreBlog
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
             services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(Configuration["CoreBlog:ConnectionString"]));
             services.AddTransient<IPostRepository, PostRepository>();
         }

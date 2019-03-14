@@ -11,9 +11,27 @@ namespace CoreBlog.Models
 
         public IQueryable<Post> Posts => context.Posts;
 
-        public void CreateNewBlogPost(Post post)
+        public void CreateNewBlogPost(Post post, Category category)
         {
-            throw new NotImplementedException();
+            var user = context.Users.Where(u => u.AuthorName == "Marcus Eklund").Select(a => a.UserId).FirstOrDefault();
+            var blog = context.Blogs.Where(a => a.BlogId == a.Users.Where(b => b.UserId == user).Select(c => c.BlogForeignKey)
+            .FirstOrDefault()).Select(d => d.BlogId).FirstOrDefault();
+            var shortcontent = post.Content.Substring(0, 55) + "...";
+
+            context.Posts.Add
+                (new Post {
+                    Title = post.Title,
+                    Content = post.Content,
+                    ShortContent = shortcontent,
+                    MetaDataDescription = post.MetaDataDescription,
+                    UrlSlug = post.UrlSlug,
+                    Published = post.Published,
+                    PostCreatedAt = DateTime.Now,
+                    AuthorForeignKey = user,
+                    BlogForeignKey = blog,
+                    Category = new Category { CategoryName = category.CategoryName }
+                });
+            context.SaveChanges();
         }
 
         public void DeleteBlogPost(int postId)
