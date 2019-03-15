@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using CoreBlog.Models.ViewModels;
+using System.Linq;
 
 namespace CoreBlog.Models
 {
@@ -12,8 +13,8 @@ namespace CoreBlog.Models
 
         Post GetBlogPostById(int? postId);
 
-        Post GetBlogPostByUrlSlug(string urlSlug);
+        PostViewModel GetBlogPostByUrlSlug(string urlSlug, bool published);
 
-        void UpdateBlogPost(Post post);
+        void UpdateBlogPost(PostViewModel post);
     }
 }

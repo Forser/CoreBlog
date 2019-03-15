@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoreBlog.Models.ViewModels;
+using System;
 using System.Linq;
 
 namespace CoreBlog.Models
@@ -57,21 +58,37 @@ namespace CoreBlog.Models
             return dbPost;
         }
 
-        public Post GetBlogPostByUrlSlug(string urlSlug)
+        public PostViewModel GetBlogPostByUrlSlug(string urlSlug, bool published = true)
         {
-            Post dbPost = new Post();
+            PostViewModel dbPost = new PostViewModel();
+            var post = new Post();
+
 
             if (!string.IsNullOrEmpty(urlSlug))
             {
-                dbPost = context.Posts.SingleOrDefault(p => p.UrlSlug == urlSlug);
+                if (published == true)
+                {
+                    post = context.Posts.Where(c => c.Published == published).SingleOrDefault(p => p.UrlSlug == urlSlug);
+                }
+                else
+                {
+                    post = context.Posts.SingleOrDefault(p => p.UrlSlug == urlSlug);
+                }
+                var categories = context.Categories.Single(p => p.CategoryId == post.CategoryId);
+                dbPost.Post = post;
+                dbPost.Category = categories;
+                return dbPost;
             }
 
-            return dbPost;
+            return null;
         }
 
-        public void UpdateBlogPost(Post post)
+        public void UpdateBlogPost(PostViewModel post)
         {
-            throw new NotImplementedException();
+            context.Posts.Update(post.Post);
+            context.Categories.Update(post.Category);
+
+            context.SaveChanges();
         }
     }
 }

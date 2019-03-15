@@ -28,8 +28,11 @@ namespace CoreBlog.Controllers
             if (ModelState.IsValid)
             {
                 repository.CreateNewBlogPost(postViewModel.Post, postViewModel.Category);
+                return RedirectToAction("List", "Home");
             }
-            return RedirectToAction("List", "Home");
+
+            ModelState.AddModelError("error", "ID wasn't available");
+            return View(postViewModel);
         }
 
         public IActionResult DeletePost(int id = 0)
@@ -42,6 +45,28 @@ namespace CoreBlog.Controllers
 
             ModelState.AddModelError("error", "ID wasn't available");
             return View();
+        }
+
+        public IActionResult EditPost(string id)
+        {
+            var result = repository.GetBlogPostByUrlSlug(id, false);
+
+            if(result == null) { return View("PostNotFound"); }
+
+            return View(result);
+        }
+
+        [HttpPost]
+        public IActionResult EditPost(PostViewModel postViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                repository.UpdateBlogPost(postViewModel);
+                return RedirectToAction("Index", "Post");
+            }
+
+            ModelState.AddModelError("error", "Model Error");
+            return View(postViewModel);
         }
     }
 }

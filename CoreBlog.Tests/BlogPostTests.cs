@@ -6,8 +6,6 @@ using System.Linq;
 using System;
 using CoreBlog.Controllers;
 using CoreBlog.Models.ViewModels;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
 
 namespace CoreBlog.Tests
 {
@@ -71,7 +69,7 @@ namespace CoreBlog.Tests
             // Assert
             Post[] postsArray = result.Posts.Where(p => p.Published == true).ToArray();
             Assert.True(postsArray.Length == 2);
-            Assert.Equal("My Third Title", postsArray[1].Title);
+            Assert.Equal("My Third Title", postsArray[0].Title);
         }
 
         [Fact]
@@ -79,6 +77,7 @@ namespace CoreBlog.Tests
         {
             // Arrange
             Mock<IPostRepository> mock = new Mock<IPostRepository>();
+
             var mockPost = new Post
             {
                 PostId = 1,
@@ -92,7 +91,21 @@ namespace CoreBlog.Tests
                 User = new User { AuthorName = "Marcus Eklund" },
                 Blog = new Blog { BlogId = 1 }
             };
-            mock.Setup(repo => repo.GetBlogPostByUrlSlug("my_first_title")).Returns(mockPost);
+
+            var mockCategory = new Category
+            {
+                CategoryId = 1,
+                CategoryName = "Development",
+                UrlSlug = "development"
+            };
+
+            var mockViewPost = new PostViewModel
+            {
+                Post = mockPost,
+                Category = mockCategory
+            };
+
+            mock.Setup(repo => repo.GetBlogPostByUrlSlug("my_first_title", true)).Returns(mockViewPost);
             HomeController target = new HomeController(mock.Object);
 
             // Act
@@ -100,7 +113,7 @@ namespace CoreBlog.Tests
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Equal(mockPost, viewResult.ViewData.Model);
+            Assert.Equal(mockViewPost, viewResult.ViewData.Model);
         }
 
         [Fact]
@@ -122,7 +135,7 @@ namespace CoreBlog.Tests
                 Blog = new Blog { BlogId = 1 },
                 Category = new Category { CategoryName = "Development " }
             };
-            mock.Setup(repo => repo.GetBlogPostByUrlSlug("my_second_title")).Returns((Post)null);
+            mock.Setup(repo => repo.GetBlogPostByUrlSlug("my_second_title", true)).Returns((PostViewModel)null);
             var target = new HomeController(mock.Object);
 
             // Act
