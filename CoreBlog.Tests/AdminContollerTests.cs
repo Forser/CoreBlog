@@ -47,7 +47,7 @@ namespace CoreBlog.Tests
 
             // Assert
             var routeResult = Assert.IsType<RedirectToActionResult>(target);
-            Assert.Equal("List", routeResult.ActionName);
+            Assert.Equal("Index", routeResult.ActionName);
         }
 
         [Fact]

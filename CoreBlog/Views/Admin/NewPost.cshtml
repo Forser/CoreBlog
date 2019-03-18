@@ -1,9 +1,14 @@
 ﻿@model PostViewModel
-@{ 
+@{
     Layout = "_AdminLayout";
 }
 
-<form asp-controller="Post" asp-action="NewPost" method="post">
+@if (TempData["message"] != null)
+{
+    <div class="alert">@TempData["message"]</div>
+}
+
+<form asp-controller="Admin" asp-action="NewPost" method="post">
     <div class="grid-container">
         <div class="grid-x grid-margin-x">
             <div asp-validation-summary="All" class="form-error"></div>

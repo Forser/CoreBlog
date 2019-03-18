@@ -13,16 +13,20 @@
     <div class="blog-post">
         <h3>@post.Title  <small>- Published : @(post.Published == true ? "Yes" : "No")</small></h3>
         <div class="callout">
-            <ul class="menu simple">
-                <li>Edit</li>
-                <li>
-                    <form asp-action="DeletePost" method="post">
-                        <input type="hidden" name="PostID" value="@post.PostId" />
-                        <button type="submit" class="button rounded">Delete</button>
-                    </form>
-                </li>
-                <li>Publish</li>
-            </ul>
+                <ul class="menu simple">
+                    <li>Edit</li>
+                    <li><a asp-action="DeletePost" asp-Route-postId="@post.PostId">Delete</a></li>
+                    <li>
+                        @if (post.Published == true)
+                        {
+                            <a asp-action="Unpublish" asp-route-postId="@post.PostId">Unpublish</a>
+                        }
+                        else
+                        {
+                            <a asp-action="Publish" asp-route-postId="@post.PostId">Publish</a>
+                        }
+                    </li>
+                </ul>
         </div>
     </div>
 }

@@ -92,5 +92,33 @@ namespace CoreBlog.Models
 
             context.SaveChanges();
         }
+
+        public Post UnPublishPost(int? postId)
+        {
+            Post dbPost = context.Posts.FirstOrDefault(p => p.PostId == postId);
+
+            if(postId != 0)
+            {
+                dbPost.Published = false;
+                context.Posts.Update(dbPost);
+                context.SaveChanges();
+            }
+
+            return null;
+        }
+
+        public Post PublishPost(int? postId)
+        {
+            Post dbPost = context.Posts.FirstOrDefault(p => p.PostId == postId);
+
+            if (postId != 0)
+            {
+                dbPost.Published = true;
+                context.Posts.Update(dbPost);
+                context.SaveChanges();
+            }
+
+            return null;
+        }
     }
 }

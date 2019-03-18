@@ -16,5 +16,8 @@ namespace CoreBlog.Models
         PostViewModel GetBlogPostByUrlSlug(string urlSlug);
 
         void UpdateBlogPost(PostViewModel post);
+
+        Post UnPublishPost(int? postId);
+        Post PublishPost(int? postId);
     }
 }

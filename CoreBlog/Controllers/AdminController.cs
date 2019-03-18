@@ -3,6 +3,7 @@ using CoreBlog.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CoreBlog.Controllers
 {
@@ -34,14 +35,13 @@ namespace CoreBlog.Controllers
             if (ModelState.IsValid)
             {
                 repository.CreateNewBlogPost(postViewModel.Post, postViewModel.Category);
-                return RedirectToAction("List", "Home");
+                return RedirectToAction("Index");
             }
 
             ModelState.AddModelError("error", "ID wasn't available");
             return View(postViewModel);
         }
 
-        [HttpPost]
         public IActionResult DeletePost(int postId = 0)
         {
             Post deletedPost = repository.DeleteBlogPost(postId);
@@ -74,6 +74,30 @@ namespace CoreBlog.Controllers
 
             ModelState.AddModelError("error", "Model Error");
             return View(postViewModel);
+        }
+
+        public IActionResult Unpublish(int postId)
+        {
+            Post post = repository.UnPublishPost(postId);
+
+            if (post != null)
+            {
+                TempData["message"] = $"{post.Title} was unpublished";
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Publish(int postId)
+        {
+            Post post = repository.PublishPost(postId);
+
+            if (post != null)
+            {
+                TempData["message"] = $"{post.Title} was published";
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }
