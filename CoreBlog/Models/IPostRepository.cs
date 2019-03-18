@@ -6,6 +6,7 @@ namespace CoreBlog.Models
     public interface IPostRepository
     {
         IQueryable<Post> Posts { get; }
+        IQueryable<Category> Categories { get; }
 
         void CreateNewBlogPost(Post post, Category category);
 

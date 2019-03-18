@@ -16,6 +16,16 @@ namespace CoreBlog.Controllers
 
         public ViewResult Index() => View();
 
+        [ActionName("Category")]
+        public ViewResult ViewPostsByCategory(string id)
+        {
+            var _category = repository.Categories.Where(p => p.CategoryName == id).Select(p => p.CategoryId).FirstOrDefault();
+            PostsListViewModel Posts = new PostsListViewModel { Posts = repository.Posts.Where(p => p.CategoryId == _category)
+                .Where(u=>u.Published == true).OrderByDescending(p => p.PostId) };
+
+            return View("List", Posts);
+        }
+
         [ActionName("ViewPost")]
         public IActionResult ViewPostBySlug(string id)
         {

@@ -12,6 +12,8 @@ namespace CoreBlog.Models
 
         public IQueryable<Post> Posts => context.Posts;
 
+        public IQueryable<Category> Categories => context.Categories;
+
         public void CreateNewBlogPost(Post post, Category category)
         {
             var user = context.Users.Where(u => u.AuthorName == "Marcus Eklund").Select(a => a.UserId).FirstOrDefault();
