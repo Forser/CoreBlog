@@ -1,0 +1,40 @@
+﻿@model PostViewModel
+@{
+    Layout = "_AdminLayout";
+}
+
+@if (TempData["message"] != null)
+{
+    <div class="alert">@TempData["message"]</div>
+}
+
+<form asp-controller="Admin" asp-action="NewPost" method="post">
+    <div class="grid-container">
+        <div class="grid-x grid-margin-x">
+            <div asp-validation-summary="All" class="form-error"></div>
+            <div class="medium-6 cell">
+                <label asp-for="Post.Title" class="text-left middle">
+                    Title: <input type="text" asp-for="Post.Title" />
+                </label>
+                <label asp-for="Post.Content" class="text-left middle">
+                    Content: <textarea asp-for="Post.Content"></textarea>
+                </label>
+                <label asp-for="Post.MetaDataDescription" class="text-left middle">
+                    Meta Description: <input type="text" asp-for="Post.MetaDataDescription" />
+                </label>
+                <label asp-for="Post.UrlSlug" class="text-left middle">
+                    Url Slug: <input type="text" asp-for="Post.UrlSlug" />
+                </label>
+                <fieldset class="large-5 cell">
+                    Publish:
+                    <input type="radio" asp-for="Post.Published" value="false" id="notPublished" required /><label for="notPublished">Not Published</label>
+                    <input type="radio" asp-for="Post.Published" value="true" id="published" /><label for="published">Published</label>
+                </fieldset>
+                <label asp-for="Category.CategoryName" class="text-left middle">
+                    Category: <input type="text" asp-for="Category.CategoryName" id="middle-label" />
+                </label>
+                <button type="submit" class="button rounded bordered shadow">Save</button>
+            </div>
+        </div>
+    </div>
+</form>

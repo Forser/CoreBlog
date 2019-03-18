@@ -69,7 +69,7 @@ namespace CoreBlog.Controllers
             if (ModelState.IsValid)
             {
                 repository.UpdateBlogPost(postViewModel);
-                return RedirectToAction("Index", "Post");
+                return RedirectToAction("Index");
             }
 
             ModelState.AddModelError("error", "Model Error");

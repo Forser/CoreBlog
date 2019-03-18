@@ -17,7 +17,15 @@ namespace CoreBlog.Models
             var user = context.Users.Where(u => u.AuthorName == "Marcus Eklund").Select(a => a.UserId).FirstOrDefault();
             var blog = context.Blogs.Where(a => a.BlogId == a.Users.Where(b => b.UserId == user).Select(c => c.BlogForeignKey)
             .FirstOrDefault()).Select(d => d.BlogId).FirstOrDefault();
-            var shortcontent = post.Content.Substring(0, 55) + "...";
+            var shortcontent = "";
+            if (post.Content.Length > 55)
+            {
+                shortcontent = post.Content.Substring(0, 55) + "...";
+            }
+            else
+            {
+                shortcontent = post.Content;
+            }
 
             context.Posts.Add
                 (new Post {

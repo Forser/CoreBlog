@@ -14,7 +14,7 @@
         <h3>@post.Title  <small>- Published : @(post.Published == true ? "Yes" : "No")</small></h3>
         <div class="callout">
                 <ul class="menu simple">
-                    <li>Edit</li>
+                    <li><a asp-action="EditPost" asp-route-id="@post.PostId">Edit</a></li>
                     <li><a asp-action="DeletePost" asp-Route-postId="@post.PostId">Delete</a></li>
                     <li>
                         @if (post.Published == true)
