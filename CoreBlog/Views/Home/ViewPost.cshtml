@@ -1,8 +1,8 @@
-﻿@model Post
+﻿@model PostViewModel
 
 <div class="blog-post">
-    <h3>@Model.Title <small>@Model.PostCreatedAt.ToShortDateString()</small></h3>
-    <p>@Model.Content</p>
+    <h3>@Model.Post.Title <small>@Model.Post.PostCreatedAt.ToShortDateString()</small></h3>
+    <p>@Model.Post.Content</p>
     <div class="callout">
         <ul class="menu simple">
             <li><a href="#">Author: Mike Mikers</a></li>

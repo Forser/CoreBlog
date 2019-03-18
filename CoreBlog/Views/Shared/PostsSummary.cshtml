@@ -1,7 +1,7 @@
 ﻿@model Post
 
     <div class="blog-post">
-        <h3>@Model.Title <small>@Model.PostCreatedAt</small></h3>
+        <h3><a asp-action="ViewPost" asp-route-id="@Model.UrlSlug">@Model.Title</a><small> - @Model.PostCreatedAt</small></h3>
         <p>@Model.ShortContent</p>
         <div class="callout">
             <ul class="menu simple">

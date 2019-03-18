@@ -15,7 +15,7 @@
         <div class="callout">
                 <ul class="menu simple">
                     <li><a asp-action="EditPost" asp-route-id="@post.PostId">Edit</a></li>
-                    <li><a asp-action="DeletePost" asp-Route-postId="@post.PostId">Delete</a></li>
+                    <li><a asp-action="DeletePost" asp-route-postId="@post.PostId">Delete</a></li>
                     <li>
                         @if (post.Published == true)
                         {
