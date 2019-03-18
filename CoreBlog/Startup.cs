@@ -1,6 +1,7 @@
 ﻿using CoreBlog.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,10 @@ namespace CoreBlog
             services.AddMvc();
 
             services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(Configuration["CoreBlog:ConnectionString"]));
+            services.AddDbContext<AppIdentityDbContext>(options => options.UseSqlServer(Configuration["CoreBlogIdentity:ConnectionString"]));
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AppIdentityDbContext>().AddDefaultTokenProviders();
+            services.AddMemoryCache();
+            services.AddSession();
             services.AddTransient<IPostRepository, PostRepository>();
         }
 
@@ -33,13 +38,17 @@ namespace CoreBlog
 
             app.UseStatusCodePages();
             app.UseStaticFiles();
+            app.UseSession();
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(name: "default", template: "{controller=Home}/{action=List}/{id?}");
                 routes.MapRoute(name: "ViewPost", template: "{action}/{id?}", defaults: new { controller = "Home", action = "ViewPostBySlug" });
+                routes.MapRoute(name: null, template: "{controller}/{action}/{id?}");
             });
 
             SeedBlogPosts.EnsuredPopulated(app);
+            IdentitySeedData.EnsurePopulated(app);
         }
     }
 }

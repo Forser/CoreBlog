@@ -40,7 +40,7 @@ namespace CoreBlog.Tests
                 Category = mockCategory
             };
 
-            var controller = new PostController(mock.Object);
+            var controller = new AdminController(mock.Object);
 
             // Act
             var target = controller.NewPost(mockPostViewModel);
@@ -84,10 +84,10 @@ namespace CoreBlog.Tests
                 Category = mockCategory
             };
 
-            mock.Setup(m => m.GetBlogPostByUrlSlug("my_first_title", false)).Returns(mockView);
+            mock.Setup(m => m.GetBlogPostById(1)).Returns(mockView);
 
             // Act
-            var fetchController = new PostController(mock.Object);
+            var fetchController = new AdminController(mock.Object);
 
             var modifiedPost = new Post
             {
@@ -128,8 +128,24 @@ namespace CoreBlog.Tests
         [Fact]
         public void Delete_One_Blog_Post()
         {
+            // Arrange - Create a Post
+            Post post = new Post
+            {
+                PostId = 2,
+                Title = "My Second Title",
+                Content = "Ipsum Lorem",
+                ShortContent = "Ipsum",
+                MetaDataDescription = "Ipsum, Lorem",
+                UrlSlug = "/my_second_title",
+                Published = false,
+                PostCreatedAt = DateTime.Now,
+                User = new User { AuthorName = "Marcus Eklund" },
+                Blog = new Blog { BlogId = 1 },
+                Category = new Category { CategoryName = "Development " }
+            };
+
             // Arrange
-            Mock<IPostRepository> mock = new Mock<IPostRepository>();
+            Mock< IPostRepository> mock = new Mock<IPostRepository>();
             mock.SetupGet(m => m.Posts).Returns(new Post[] 
             {
                 new Post
@@ -142,20 +158,6 @@ namespace CoreBlog.Tests
                     UrlSlug = "/my_first_title",
                     Published = true,
                     PostCreatedAt = DateTime.Parse("2018-12-24 12:00"),
-                    User = new User { AuthorName = "Marcus Eklund" },
-                    Blog = new Blog { BlogId = 1 },
-                    Category = new Category { CategoryName = "Development " }
-                },
-                new Post
-                {
-                    PostId = 2,
-                    Title = "My Second Title",
-                    Content = "Ipsum Lorem",
-                    ShortContent = "Ipsum",
-                    MetaDataDescription = "Ipsum, Lorem",
-                    UrlSlug = "/my_second_title",
-                    Published = false,
-                    PostCreatedAt = DateTime.Now,
                     User = new User { AuthorName = "Marcus Eklund" },
                     Blog = new Blog { BlogId = 1 },
                     Category = new Category { CategoryName = "Development " }
@@ -175,18 +177,13 @@ namespace CoreBlog.Tests
                     Category = new Category { CategoryName = "Development " }
                 }
             }.AsQueryable<Post>);
-            var controller = new PostController(mock.Object);
-            var homeController = new HomeController(mock.Object);
+            var controller = new AdminController(mock.Object);
 
             // Act
-            var target = controller.DeletePost(2);
-            var result = homeController.List().ViewData.Model as PostsListViewModel;
+            var target = controller.DeletePost(post.PostId);
 
             // Assert
-            Post[] postsArray = result.Posts.Where(p => p.Published == true).ToArray();
-            var routeResult = Assert.IsType<RedirectToActionResult>(target);
-            Assert.Equal("List", routeResult.ActionName);
-            Assert.True(postsArray.Count() == 2);
+            mock.Verify(m => m.DeleteBlogPost(post.PostId));
         }
     }
 }

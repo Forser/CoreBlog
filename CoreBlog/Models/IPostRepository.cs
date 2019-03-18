@@ -9,11 +9,11 @@ namespace CoreBlog.Models
 
         void CreateNewBlogPost(Post post, Category category);
 
-        void DeleteBlogPost(int postId);
+        Post DeleteBlogPost(int postId);
 
-        Post GetBlogPostById(int? postId);
+        PostViewModel GetBlogPostById(int? postId);
 
-        PostViewModel GetBlogPostByUrlSlug(string urlSlug, bool published);
+        PostViewModel GetBlogPostByUrlSlug(string urlSlug);
 
         void UpdateBlogPost(PostViewModel post);
     }

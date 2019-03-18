@@ -19,7 +19,7 @@ namespace CoreBlog.Controllers
         [ActionName("ViewPost")]
         public IActionResult ViewPostBySlug(string id)
         {
-            var result = repository.GetBlogPostByUrlSlug(id, true);
+            var result = repository.GetBlogPostByUrlSlug(id);
 
             if (result == null) { return View("PostNotFound"); }
 

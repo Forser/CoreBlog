@@ -1,19 +1,25 @@
 ﻿using CoreBlog.Models;
 using CoreBlog.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace CoreBlog.Controllers
 {
-    public class PostController : Controller
+    [Authorize]
+    public class AdminController : Controller
     {
         private readonly IPostRepository repository;
 
-        public PostController(IPostRepository repo)
+        public AdminController(IPostRepository repo)
         {
             repository = repo;
         }
 
-        public IActionResult Index() => View();
+        public ViewResult Index() => View(new PostsListViewModel
+        {
+            Posts = repository.Posts.OrderByDescending(p => p.PostId)
+        });
 
         public IActionResult NewPost()
         {
@@ -35,21 +41,22 @@ namespace CoreBlog.Controllers
             return View(postViewModel);
         }
 
-        public IActionResult DeletePost(int id = 0)
+        [HttpPost]
+        public IActionResult DeletePost(int postId = 0)
         {
-            if(id >= 0)
-            { 
-                repository.DeleteBlogPost(id);
-                return RedirectToAction("List", "Home");
+            Post deletedPost = repository.DeleteBlogPost(postId);
+
+            if (deletedPost != null)
+            {
+                TempData["message"] = $"{deletedPost.Title} was deleted";
             }
 
-            ModelState.AddModelError("error", "ID wasn't available");
-            return View();
+            return RedirectToAction("Index");
         }
 
-        public IActionResult EditPost(string id)
+        public IActionResult EditPost(int id)
         {
-            var result = repository.GetBlogPostByUrlSlug(id, false);
+            var result = repository.GetBlogPostById(id);
 
             if(result == null) { return View("PostNotFound"); }
 

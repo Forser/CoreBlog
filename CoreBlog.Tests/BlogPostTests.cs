@@ -105,7 +105,7 @@ namespace CoreBlog.Tests
                 Category = mockCategory
             };
 
-            mock.Setup(repo => repo.GetBlogPostByUrlSlug("my_first_title", true)).Returns(mockViewPost);
+            mock.Setup(repo => repo.GetBlogPostByUrlSlug("my_first_title")).Returns(mockViewPost);
             HomeController target = new HomeController(mock.Object);
 
             // Act
@@ -135,7 +135,7 @@ namespace CoreBlog.Tests
                 Blog = new Blog { BlogId = 1 },
                 Category = new Category { CategoryName = "Development " }
             };
-            mock.Setup(repo => repo.GetBlogPostByUrlSlug("my_second_title", true)).Returns((PostViewModel)null);
+            mock.Setup(repo => repo.GetBlogPostByUrlSlug("my_second_title")).Returns((PostViewModel)null);
             var target = new HomeController(mock.Object);
 
             // Act

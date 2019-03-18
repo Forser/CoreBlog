@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace CoreBlog.Models
 {
     public class Post
     {
         public int PostId { get; set; }
+        [Required(ErrorMessage = "Title is required")]
         public string Title { get; set; }
+        [Required(ErrorMessage = "Your content is empty!")]
         public string Content { get; set; }
         public string ShortContent { get; set; }
         public string MetaDataDescription { get; set; }

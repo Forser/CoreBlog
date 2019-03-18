@@ -35,30 +35,38 @@ namespace CoreBlog.Models
             context.SaveChanges();
         }
 
-        public void DeleteBlogPost(int postId)
+        public Post DeleteBlogPost(int postId)
         {
-            Post dbPost = context.Posts.SingleOrDefault(p => p.PostId == postId);
+            Post dbPost = context.Posts.FirstOrDefault(p => p.PostId == postId);
 
             if (dbPost != null)
             {
                 context.Posts.Remove(dbPost);
                 context.SaveChanges();
             }
+
+            return null;
         }
 
-        public Post GetBlogPostById(int? postId)
+        public PostViewModel GetBlogPostById(int? postId)
         {
-            Post dbPost = new Post();
+            PostViewModel dbPost = new PostViewModel();
+            var post = new Post();
 
             if (postId != 0)
             {
-                dbPost = context.Posts.SingleOrDefault(p => p.PostId == postId);
+                post = context.Posts.SingleOrDefault(p => p.PostId == postId);
+                var categories = context.Categories.Single(p => p.CategoryId == post.CategoryId);
+
+                dbPost.Post = post;
+                dbPost.Category = categories;
+                return dbPost;
             }
 
-            return dbPost;
+            return null;
         }
 
-        public PostViewModel GetBlogPostByUrlSlug(string urlSlug, bool published = true)
+        public PostViewModel GetBlogPostByUrlSlug(string urlSlug)
         {
             PostViewModel dbPost = new PostViewModel();
             var post = new Post();
@@ -66,14 +74,8 @@ namespace CoreBlog.Models
 
             if (!string.IsNullOrEmpty(urlSlug))
             {
-                if (published == true)
-                {
-                    post = context.Posts.Where(c => c.Published == published).SingleOrDefault(p => p.UrlSlug == urlSlug);
-                }
-                else
-                {
-                    post = context.Posts.SingleOrDefault(p => p.UrlSlug == urlSlug);
-                }
+                post = context.Posts.Where(c => c.Published == true).SingleOrDefault(p => p.UrlSlug == urlSlug);
+
                 var categories = context.Categories.Single(p => p.CategoryId == post.CategoryId);
                 dbPost.Post = post;
                 dbPost.Category = categories;
