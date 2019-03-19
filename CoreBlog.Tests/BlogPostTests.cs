@@ -64,7 +64,7 @@ namespace CoreBlog.Tests
 
             // Act
             HomeController controller = new HomeController(mock.Object);
-            PostsListViewModel result = controller.List().ViewData.Model as PostsListViewModel;
+            PostsListViewModel result = controller.List(null, 1).ViewData.Model as PostsListViewModel;
 
             // Assert
             Post[] postsArray = result.Posts.Where(p => p.Published == true).ToArray();
@@ -145,6 +145,134 @@ namespace CoreBlog.Tests
             Assert.IsType<ViewResult>(result);
             var contentResult = result as ViewResult;
             Assert.Equal("PostNotFound", contentResult.ViewName);
+        }
+
+        [Fact]
+        public void Can_Send_Pagination_View_Model()
+        {
+            // Arrange
+            Mock<IPostRepository> mock = new Mock<IPostRepository>();
+            mock.Setup(m => m.Posts).Returns((new Post[]
+            {
+                new Post
+                {
+                    PostId = 1,
+                    Title = "My First Title",
+                    Content = "Lorem Ipsum",
+                    ShortContent = "Lorem",
+                    MetaDataDescription = "Lorem, Ipsum",
+                    UrlSlug = "/my_first_title",
+                    Published = true,
+                    PostCreatedAt = DateTime.Parse("2018-12-24 12:00"),
+                    User = new User { AuthorName = "Marcus Eklund" },
+                    Blog = new Blog { BlogId = 1 },
+                    Category = new Category { CategoryName = "Development " }
+                },
+                new Post
+                {
+                    PostId = 2,
+                    Title = "My Second Title",
+                    Content = "Ipsum Lorem",
+                    ShortContent = "Ipsum",
+                    MetaDataDescription = "Ipsum, Lorem",
+                    UrlSlug = "/my_second_title",
+                    Published = false,
+                    PostCreatedAt = DateTime.Now,
+                    User = new User { AuthorName = "Marcus Eklund" },
+                    Blog = new Blog { BlogId = 1 },
+                    Category = new Category { CategoryName = "Development " }
+                },
+                new Post
+                {
+                    PostId = 3,
+                    Title = "My Third Title",
+                    Content = "Icky Lorem",
+                    ShortContent = "Snicky",
+                    MetaDataDescription = "Scooby",
+                    UrlSlug = "/my_third_title",
+                    Published = true,
+                    PostCreatedAt = DateTime.Now,
+                    User = new User { AuthorName = "Marcus Eklund" },
+                    Blog = new Blog { BlogId = 1 },
+                    Category = new Category { CategoryName = "Development " }
+                }
+            }).AsQueryable<Post>);
+
+            // Arrange
+            HomeController controller = new HomeController(mock.Object) { PageSize = 2 };
+
+            // Act
+            PostsListViewModel result = controller.List(null, 1).ViewData.Model as PostsListViewModel;
+
+            // Assert
+            PagingInfo pageInfo = result.PagingInfo;
+            Assert.Equal(1, pageInfo.CurrentPage);
+            Assert.Equal(2, pageInfo.ItemsPerPage);
+            Assert.Equal(2, pageInfo.TotalItems);
+            Assert.Equal(1, pageInfo.TotalPages);
+        }
+
+        [Fact]
+        public void Can_Paginate()
+        {
+            // Arrange
+            Mock<IPostRepository> mock = new Mock<IPostRepository>();
+            mock.Setup(m => m.Posts).Returns((new Post[]
+            {
+                new Post
+                {
+                    PostId = 1,
+                    Title = "My First Title",
+                    Content = "Lorem Ipsum",
+                    ShortContent = "Lorem",
+                    MetaDataDescription = "Lorem, Ipsum",
+                    UrlSlug = "/my_first_title",
+                    Published = true,
+                    PostCreatedAt = DateTime.Parse("2018-12-24 12:00"),
+                    User = new User { AuthorName = "Marcus Eklund" },
+                    Blog = new Blog { BlogId = 1 },
+                    Category = new Category { CategoryName = "Development " }
+                },
+                new Post
+                {
+                    PostId = 2,
+                    Title = "My Second Title",
+                    Content = "Ipsum Lorem",
+                    ShortContent = "Ipsum",
+                    MetaDataDescription = "Ipsum, Lorem",
+                    UrlSlug = "/my_second_title",
+                    Published = false,
+                    PostCreatedAt = DateTime.Now,
+                    User = new User { AuthorName = "Marcus Eklund" },
+                    Blog = new Blog { BlogId = 1 },
+                    Category = new Category { CategoryName = "Development " }
+                },
+                new Post
+                {
+                    PostId = 3,
+                    Title = "My Third Title",
+                    Content = "Icky Lorem",
+                    ShortContent = "Snicky",
+                    MetaDataDescription = "Scooby",
+                    UrlSlug = "/my_third_title",
+                    Published = true,
+                    PostCreatedAt = DateTime.Now,
+                    User = new User { AuthorName = "Marcus Eklund" },
+                    Blog = new Blog { BlogId = 1 },
+                    Category = new Category { CategoryName = "Development " }
+                }}).AsQueryable<Post>);
+
+            HomeController controller = new HomeController(mock.Object);
+            controller.PageSize = 3;
+
+            // Act
+            PostsListViewModel result = controller.List(null, 1).ViewData.Model as PostsListViewModel;
+
+            // Assert
+            Post[] postArray = result.Posts.ToArray();
+            Assert.True(postArray.Length == 2);
+            Assert.Equal("My Third Title", postArray[0].Title);
+            Assert.Equal("My First Title", postArray[1].Title);
         }
 
         private T GetViewModel<T>(IActionResult result) where T : class

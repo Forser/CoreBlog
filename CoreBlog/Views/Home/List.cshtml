@@ -2,5 +2,15 @@
 
 @foreach (var p in Model.Posts)
 {
-       @Html.Partial("PostsSummary", p)
+    @Html.Partial("PostsSummary", p)
 }
+
+
+<div class="row column">
+    <ul class="pagination" role="navigation" aria-label="Pagination">
+        <li page-model="@Model.PagingInfo" page-action="List" page-classes-enabled="false"
+            page-class="button" page-class-normal="button" page-class-selected="button"
+            page-url-posts="@Model.CurrentCategory">
+        </li> 
+    </ul>
+</div>

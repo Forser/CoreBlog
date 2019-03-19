@@ -8,6 +8,7 @@ namespace CoreBlog.Controllers
     public class HomeController : Controller
     {
         private IPostRepository repository;
+        public int PageSize = 4;
 
         public HomeController(IPostRepository repo)
         {
@@ -36,9 +37,28 @@ namespace CoreBlog.Controllers
             return View(result);
         }
 
-        public ViewResult List() => View(new PostsListViewModel
+        public ViewResult List(string category, int postsPage = 1)
         {
-            Posts = repository.Posts.Where(p => p.Published == true).OrderByDescending(p => p.PostId)
-        });
+            Category _category = new Category();
+            if (category != null)
+            {
+                _category = repository.Categories.Where(e => e.CategoryName == category).SingleOrDefault();
+            }
+
+            return View(new PostsListViewModel {
+                Posts = repository.Posts.Where(p => p.Published == true)
+                    .Where(p => category == null || p.Category == _category)
+                    .OrderByDescending(p => p.PostId)
+                    .Skip((postsPage - 1) * PageSize)
+                    .Take(PageSize), PagingInfo = new PagingInfo
+                    {
+                        CurrentPage = postsPage,
+                        ItemsPerPage = PageSize,
+                        TotalItems = category == null ?
+                        repository.Posts.Where(p => p.Published == true).Count() : repository.Posts.Where(e => e.Category == _category).Where(p => p.Published == true).Count()
+                    },
+                CurrentCategory = category
+            });
+        }
     }
 }
