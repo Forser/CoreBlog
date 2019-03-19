@@ -19,6 +19,14 @@ namespace CoreBlog.Models
             var user = context.Users.Where(u => u.AuthorName == "Marcus Eklund").Select(a => a.UserId).FirstOrDefault();
             var blog = context.Blogs.Where(a => a.BlogId == a.Users.Where(b => b.UserId == user).Select(c => c.BlogForeignKey)
             .FirstOrDefault()).Select(d => d.BlogId).FirstOrDefault();
+
+            var _category = context.Categories.Where(a => a.CategoryName == category.CategoryName).FirstOrDefault();
+
+            if (_category == null)
+            {
+                _category = category;
+            };
+
             var shortcontent = "";
             if (post.Content.Length > 55)
             {
@@ -40,7 +48,7 @@ namespace CoreBlog.Models
                     PostCreatedAt = DateTime.Now,
                     AuthorForeignKey = user,
                     BlogForeignKey = blog,
-                    Category = new Category { CategoryName = category.CategoryName }
+                    Category = _category
                 });
             context.SaveChanges();
         }
